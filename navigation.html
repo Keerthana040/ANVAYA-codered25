@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigation - Anvaya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+    }
+
+    header {
+      background-color: #111;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header nav a {
+      text-decoration: none;
+      color: #4caf50;
+      margin: 0 15px;
+      font-size: 18px;
+      transition: color 0.3s;
+    }
+
+    header nav a:hover {
+      color: #fff;
+    }
+
+    .content {
+      text-align: center;
+      padding: 50px 20px;
+      margin-top: 80px;
+    }
+
+    .content h1 {
+      font-size: 2.5em;
+      color: #4caf50;
+    }
+
+    .content p {
+      font-size: 1.2em;
+      margin: 20px 0;
+      color: #ccc;
+    }
+
+    .loading {
+      font-size: 1.4em;
+      color: #bbb;
+      margin-top: 30px;
+    }
+
+    .start-button {
+      padding: 10px 20px;
+      font-size: 18px;
+      color: #fff;
+      background-color: #4caf50;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      border-radius: 5px;
+    }
+
+    .start-button:hover {
+      background-color: #3a9c43;
+    }
+
+    .audio-feedback {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 5px;
+      background-color: #333;
+      display: none;
+    }
+
+    .audio-feedback h2 {
+      color: #4caf50;
+      margin-bottom: 15px;
+    }
+
+    .audio-feedback p {
+      color: #ccc;
+    }
+
+    .recording-status {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #222;
+      border-radius: 5px;
+      color: #4caf50;
+      font-size: 1.5em;
+      display: none;
+    }
+
+    .recording-status.recording {
+      background-color: #ff4500;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="main.html">Back to Main</a>
+      <a href="login.html">Logout</a>
+    </nav>
+  </header>
+
+  <div class="content">
+    <h1>Navigation Feature</h1>
+    <p>Welcome to the Navigation feature. The voice assistance will help you explore your surroundings.</p>
+
+    <button class="start-button" onclick="startNavigation()">Start Navigation</button>
+
+    <div id="loading" class="loading" style="display:none;">Initializing navigation...</div>
+    
+    <div id="audio-feedback" class="audio-feedback">
+      <h2>Audio Feedback</h2>
+      <p>The voice navigation system is assisting you through your surroundings. You can proceed with your exploration.</p>
+    </div>
+
+    <!-- Recording status message -->
+    <div id="recording-status" class="recording-status">
+      Recording started, listening to your surroundings...
+    </div>
+  </div>
+
+  <script>
+    // Automatic voice recording feature on page load
+    window.addEventListener('load', function() {
+      startRecording();
+    });
+
+    function startRecording() {
+      const recordingStatus = document.getElementById('recording-status');
+      recordingStatus.style.display = 'block';  // Show the recording status message
+
+      // Simulate a 'recording' state for 10 seconds
+      setTimeout(() => {
+        // Change color and text after 10 seconds
+        recordingStatus.classList.add('recording');
+        recordingStatus.textContent = 'Recording active: Listening to surroundings...';
+      }, 3000); // Update after 3 seconds
+
+      // Simulate voice assistant recording in background
+      console.log('Voice recording has started...'); // Simulate the backend message for actual recording
+    }
+
+    // Start navigation action simulation
+    function startNavigation() {
+      // Show loading message
+      document.getElementById('loading').style.display = 'block';
+      
+      // Simulate a backend delay (fake data fetching or processing)
+      setTimeout(function() {
+        document.getElementById('loading').style.display = 'none';  // Hide loading
+        document.getElementById('audio-feedback').style.display = 'block';  // Show feedback
+
+        // Simulating dynamic audio feedback from the "backend"
+        const fakeAudioFeedback = [
+          "Obstacle detected ahead. Please move to the right.",
+          "Continue straight for 20 meters.",
+          "Sharp turn ahead, make a left."
+        ];
+
+        let counter = 0;
+        const feedbackElement = document.querySelector('#audio-feedback p');
+
+        function simulateAudioFeedback() {
+          if (counter < fakeAudioFeedback.length) {
+            feedbackElement.textContent = fakeAudioFeedback[counter];
+            counter++;
+            setTimeout(simulateAudioFeedback, 5000);  // Simulate next feedback every 5 seconds
+          }
+        }
+        simulateAudioFeedback();
+        
+      }, 3000);  // Simulate backend processing delay (3 seconds)
+    }
+  </script>
+</body>
+</html>

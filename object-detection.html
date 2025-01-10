@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Object Detection - Anvaya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+    }
+
+    header {
+      background-color: #111;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header nav a {
+      text-decoration: none;
+      color: #4caf50;
+      margin: 0 15px;
+      font-size: 18px;
+      transition: color 0.3s;
+    }
+
+    header nav a:hover {
+      color: #fff;
+    }
+
+    .content {
+      margin: 20px;
+    }
+
+    video, canvas {
+      margin: 20px auto;
+      display: block;
+      border: 2px solid #4caf50;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="main.html">Back to Main</a>
+      <a href="login.html">Logout</a>
+    </nav>
+  </header>
+
+  <div class="content">
+    <h1>Object Detection</h1>
+    <p>Identify objects around you. Voice assistance is active.</p>
+    <video id="webcam" autoplay muted playsinline width="640" height="480"></video>
+    <canvas id="overlay" width="640" height="480"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+  <script>
+    const webcam = document.getElementById('webcam');
+    const overlay = document.getElementById('overlay');
+    const ctx = overlay.getContext('2d');
+
+    async function startWebcam() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        webcam.srcObject = stream;
+      } catch (error) {
+        console.error('Error accessing webcam:', error);
+        alert('Unable to access webcam. Please ensure it is connected and permissions are granted.');
+      }
+    }
+
+    async function loadModelAndDetect() {
+      const model = await cocoSsd.load();
+      console.log('COCO-SSD model loaded.');
+
+      webcam.addEventListener('loadeddata', async () => {
+        console.log('Webcam feed started.');
+        detectObjects(model);
+      });
+    }
+
+    async function detectObjects(model) {
+      ctx.font = '16px Poppins';
+      ctx.textBaseline = 'top';
+
+      const detect = async () => {
+        const predictions = await model.detect(webcam);
+
+        // Clear the canvas
+        ctx.clearRect(0, 0, overlay.width, overlay.height);
+
+        predictions.forEach(prediction => {
+          if (prediction.score > 0.5) { // Confidence threshold
+            const [x, y, width, height] = prediction.bbox;
+            const text = `${prediction.class} (${(prediction.score * 100).toFixed(1)}%)`;
+
+            // Draw bounding box
+            ctx.strokeStyle = '#4caf50';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x, y, width, height);
+
+            // Draw label
+            ctx.fillStyle = '#4caf50';
+            ctx.fillText(text, x, y - 10);
+          }
+        });
+
+        requestAnimationFrame(detect);
+      };
+
+      detect();
+    }
+
+    startWebcam();
+    loadModelAndDetect();
+  </script>
+</body>
+</html>
