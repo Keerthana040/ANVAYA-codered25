@@ -41,4 +41,6 @@ The app features include:
  Usage
 This application is designed to provide a modern, accessible, and engaging user experience, catering to individuals who require advanced voice, navigation, and text-to-speech features within a cohesive platform.
 
+![anvaya1](https://github.com/user-attachments/assets/b3ff792b-7619-46c0-8dee-1af59fe8ce91)
+
 
